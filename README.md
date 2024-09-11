@@ -11,62 +11,43 @@ At the moment the following third-party data are supported:
 * Polkascan API
 * Subsquid 
 
-## Installation using Subsquid endpoints
+## Prepare repository
 
-See the installation instructions of the [Polkascan Explorer UI repos](https://github.com/polkascan/explorer-ui) if the explorer is solely going to run with [Subsquid](https://www.subsquid.io/) endpoints.
-
-## Installation using Polkascan API endpoints
-Run `init.sh` to initialize repository; this will basically run:
-  * `git submodule update --init --recursive`  
-  * `cp explorer-ui-config.json explorer-ui/src/assets/config.json`
-  * `cp explorer-ui-privacy-policy.html explorer-ui/src/assets/privacy-policy.html`
-
-The [explorer-ui-config.json](https://github.com/polkascan/explorer/blob/main/explorer-ui-config.json) file contains 
-the URLs of the exposed Substrate and Explorer API endpoints
+Run `init.sh` to initialize repository; this will basically setup git submodules and copy necessary scripts.
 
 ## Running the application
 
-### Docker
+Run polkascan on **L1 Testnet**:
 
-* `docker-compose up --build`
+* `docker compose -f docker-compose.L1.yml -p polkascan-l1 up --build`
 
-### Local
+Run polkascan on **L2 Testnet**:
 
-#### Harvester
-* `cd harvester`
-* `pip install -r requirements.txt`
-* `./harvester-cli.sh run`
+* `docker compose -f docker-compose.L2.yml -p polkascan-l2 up --build`
 
-#### Explorer API
+Run the Explorer UI:
 
-* `cd explorer-api`
-* `pip install -r requirements_api.txt`
-* `./start-api.sh`
-
-#### Explorer UI
-
-For a dev server, open a terminal and run:
-```shell
-cd polkadapt
-npm i
-npm run build
-``` 
-When making changes in `polkadapt` source files you have to build again.
-
-Now open a second terminal and run:
-```shell
-npm i
-npm run start
-```
-Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+* `docker compose -f docker-compose.yml -p polkascan up --build`
 
 ## Services
-* Polkascan UI: http://127.0.0.1:8080/
-* Polkascan API playground: http://127.0.0.1:8000/graphql/
-* Polkascan API websocket: ws://127.0.0.1:8000/graphql-ws
-* MySQL database exposed at mysql://root:root@localhost:33061
 
-For more information or modification see the [Docker compose file](https://github.com/polkascan/explorer/blob/main/docker-compose.yml)
+* Polkascan UI: http://127.0.0.1:8080/
+
+### L1
+
+API playground: http://127.0.0.1:8000/graphql/.
+
+Websocket: ws://127.0.0.1:8000/graphql-ws.
+
+MySQL database exposed at mysql://root:root@localhost:33060.
+
+### L2
+
+API playground: http://127.0.0.1:8001/graphql/.
+
+Websocket: ws://127.0.0.1:8001/graphql-ws.
+
+MySQL database exposed at mysql://root:root@localhost:33061.
 
 ## Components
 
@@ -151,40 +132,6 @@ explorer-specific format. It exposes a GraphQL endpoint and enables subscription
 [PolkADAPT](https://github.com/polkascan/polkadapt) and its Adapters to obtain data from multiple data sources, like 
 the Explorer API and the Substrate node. Its design is based on flat [Material](https://material.angular.io/) component 
 design, styled in Polkascan branding.
-
-## Modifications
-
-### Substrate Node
-By default, a build of [Substrate Node Template](https://github.com/substrate-developer-hub/substrate-node-template) is 
-used. If a local Substrate node is already running on the host machine, you can change
-environment variable in the [docker-compose.yml](https://github.com/polkascan/explorer/blob/main/docker-compose.yml#L15):
-`SUBSTRATE_RPC_URL=ws://host.docker.internal:9944`
-
-Or to any public or private websocket endpoint
-
-To use PolkadotJS Apps with the local Substrate node, go to https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A9944#/explorer
-
-### Explorer UI 
-
-#### Datasources
-
-The UI is utilizing [PolkAdapt](https://github.com/polkascan/polkadapt) to combine on-chain data retrieved directly from the Substrate node, with the GraphQL endpoint with indexed data served by the [Explorer API](https://github.com/polkascan/explorer-api). In this way data like events and extrinsics can be retrieved fast, with the verification of on-chain data.
-
-
-By default, the UI are using the local endpoints, new networks can be added by extending the dict:
-
-```json
-{
-  "local": {
-    "substrateRpcUrlArray": ["ws://127.0.0.1:9944"],
-    "explorerWsUrlArray": ["ws://127.0.0.1:8000/graphql-ws"]
-  },
-  "polkadot": {
-    "substrateRpcUrlArray": ["wss://<PUBLIC_ENDPOINT>"],
-    "explorerWsUrlArray": ["wss://<HOSTED_EXPLORER_API_ENDPOINT>/graphql-ws"]
-  }
-}
-```
 
 ## Known Issues and Limitations
 

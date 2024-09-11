@@ -1,6 +1,11 @@
 {
-  "local": {
-    "substrateRpcUrlArray": ["ws://127.0.0.1:9944"],
+  "redefi-parachain": {
+    "relayChain": "redefi-relay",
+    "substrateRpcUrlArray": ["wss://test-layer2.redefi.world"],
+    "explorerWsUrlArray": ["ws://127.0.0.1:8001/graphql-ws"]
+  },
+  "redefi-relay": {
+    "substrateRpcUrlArray": ["wss://test-layer1.redefi.world"],
     "explorerWsUrlArray": ["ws://127.0.0.1:8000/graphql-ws"]
   }
 }
