@@ -18,14 +18,21 @@
 # You should have received a copy of the GNU General Public License
 # along with Polkascan. If not, see <http://www.gnu.org/licenses/>.
 #
+set -e
+
 echo "Init Git submodules ..."
 git submodule update --init --recursive
+
+echo "Applying patch to explorer-ui..."
+cd explorer-ui
+git apply ../patches/explorer-ui.patch
+cd ..
 
 echo "Copying start scripts to harvester..."
 cp start_parachain.sh harvester/
 cp start_relay.sh harvester/
 
-echo "Copying explorer-ui-config.json and explorer-ui-privacy-policy.html to explorer-ui ..."
+echo "Copying explorer-ui-config.json and explorer-ui-privacy-policy.html to explorer-ui..."
 cp explorer-ui-config.json explorer-ui/src/assets/config.json
 cp explorer-ui-privacy-policy.html explorer-ui/src/assets/privacy-policy.html
 
